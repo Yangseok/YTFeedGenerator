@@ -1,0 +1,48 @@
+완성된 기능
+
+  1. 프로젝트 스캐폴딩
+      - Wails v3 + React + TS + Vite 기반
+  2. DB 초기화 및 마이그레이션
+      - SQLite + GORM 연결, AutoMigrate() 구성
+  3. YouTube RSS 파싱 & 저장
+      - 채널 ID로 RSS 수집 → 채널/영상 Upsert
+  4. 템플릿 기본 시드
+      - 기본 템플릿 5개 자동 생성
+  5. LLM 요약 (Ollama/OpenAI)
+      - 요약 생성 API 구현
+      - 프론트에서 요약 생성 버튼 사용 가능
+  6. 프론트 UI 프레임
+      - 좌측 메뉴 + 우측 콘텐츠 레이아웃
+      - 반응형 적용
+      - 다크/라이트 토글
+  7. Feed 목록 UI 연결
+      - ListVideos 호출, 썸네일/요약/기본 정보 표시
+  8. 영상 상세 모달
+      - 클릭 시 모달 표시, 요약 생성/열기 가능
+  9. 설정 페이지 저장
+      - LLM 설정(Provider, Ollama URL, OpenAI Key/Model) localStorage 저장
+
+  ———
+
+  미완성 기능
+
+  1. 자막 추출 연결
+      - youtube-transcript-api-go 미연동
+  2. 템플릿 CRUD UI
+      - 프론트 템플릿 관리 화면 미구현
+  3. 태그 시스템
+      - 자동 태깅/관리 UI 미구현
+  4. Collector 페이지
+      - 콜렉션 관리 UI/저장 흐름 없음
+  5. 알림/트레이
+      - Wails 알림 + 트레이 미구현
+  6. 내보내기 기능
+      - Markdown/PDF 미구현
+  7. 검색/필터링
+      - 태그, 채널 기반 필터 없음
+  8. OpenAI/LLM 설정 저장 방식
+      - 현재는 localStorage; DB/암호 저장 미구현
+
+
+nautilus
+
