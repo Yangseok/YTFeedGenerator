@@ -10,11 +10,11 @@
     <Installer
         Path="ytfeedgenerator"
         Arguments=""
-        InstallLocation="C:\Program Files\My Company\My Product">
+        InstallLocation="C:\Program Files\My Company\YTFeedGenerator">
     </Installer>
     <PackageInformation
-        PackageName="My Product"
-        PackageDisplayName="My Product"
+        PackageName="YTFeedGenerator"
+        PackageDisplayName="YTFeedGenerator"
         PublisherName="CN=My Company"
         PublisherDisplayName="My Company"
         Version="0.1.0.0"
@@ -27,7 +27,7 @@
             <Application
                 Id="com.example.ytfeedgenerator"
                 Description="A YTFeedGenerator application"
-                DisplayName="My Product"
+                DisplayName="YTFeedGenerator"
                 ExecutableName="ytfeedgenerator"
                 EntryPoint="Windows.FullTrustApplication">
                 
@@ -41,7 +41,7 @@
         </Dependencies>
         <Properties>
             <Framework>false</Framework>
-            <DisplayName>My Product</DisplayName>
+            <DisplayName>YTFeedGenerator</DisplayName>
             <PublisherDisplayName>My Company</PublisherDisplayName>
             <Description>A YTFeedGenerator application</Description>
             <Logo>Assets\AppIcon.png</Logo>

@@ -7,9 +7,9 @@
     <key>CFBundleIdentifier</key>
     <string>com.example.ytfeedgenerator.dev</string>
     <key>CFBundleName</key>
-    <string>My Product (Dev)</string>
+    <string>YTFeedGenerator (Dev)</string>
     <key>CFBundleDisplayName</key>
-    <string>My Product (Dev)</string>
+    <string>YTFeedGenerator (Dev)</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>

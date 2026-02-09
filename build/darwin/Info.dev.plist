@@ -4,7 +4,7 @@
         <key>CFBundlePackageType</key>
             <string>APPL</string>
         <key>CFBundleName</key>
-            <string>My Product</string>
+            <string>YTFeedGenerator</string>
         <key>CFBundleExecutable</key>
             <string>ytfeedgenerator</string>
         <key>CFBundleIdentifier</key>
