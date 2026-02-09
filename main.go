@@ -5,6 +5,9 @@ import (
 	_ "embed"
 	"fmt"
 	"log"
+	"os"
+	"path/filepath"
+	"runtime"
 	"time"
 
 	"ytfeedgenerator/backend/app"
@@ -32,6 +35,35 @@ func init() {
 	application.RegisterEvent[string]("time")
 }
 
+func getDBPath(fileName string) string {
+	var dbDir string
+	appName := "YTFeedGenerator"
+
+	switch runtime.GOOS {
+	case "darwin":
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+			log.Printf("db path: user home dir: %v", err)
+		}
+		dbDir = filepath.Join(homeDir, "Library", "Application Support", appName)
+	case "windows":
+		appDataDir := os.Getenv("APPDATA")
+		dbDir = filepath.Join(appDataDir, appName)
+	default:
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+			log.Printf("db path: user home dir: %v", err)
+		}
+		dbDir = filepath.Join(homeDir, "."+appName)
+	}
+
+	if err := os.MkdirAll(dbDir, os.ModePerm); err != nil {
+		log.Printf("db path: mkdir: %v", err)
+	}
+
+	return filepath.Join(dbDir, fileName)
+}
+
 // main function serves as the application's entry point. It initializes the application, creates a window,
 // and starts a goroutine that emits a time-based event every second. It subsequently runs the application and
 // logs any error that might occur.
@@ -43,7 +75,7 @@ func main() {
 	// 'Bind' is a list of Go struct instances. The frontend has access to the methods of these instances.
 	// 'Mac' options tailor the application when running an macOS.
 	notifier := notifications.New()
-	appService, err := app.NewAppService("ytfeed.db")
+	appService, err := app.NewAppService(getDBPath("ytfeed.db"))
 	if err != nil {
 		log.Fatal(err)
 	}
