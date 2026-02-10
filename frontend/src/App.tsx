@@ -205,7 +205,7 @@ function App() {
     setIsSummarizing(true);
     setSummaryError("");
     const provider = llmProvider;
-    const model = provider === "openai" ? openAIModel : "llama3";
+    const model = provider === "openai" ? openAIModel : openAIModel ? openAIModel : "llama3";
     const baseURL = provider === "openai" ? "https://api.openai.com" : ollamaURL;
     const apiKey = provider === "openai" ? openAIKey : "";
 
