@@ -17,12 +17,12 @@ license: "MIT"
 release: "1"
 
 contents:
-  - src: "./bin/ytfeedgenerator"
-    dst: "/usr/local/bin/ytfeedgenerator"
+  - src: "./bin/YTFeedGenerator"
+    dst: "/usr/local/bin/YTFeedGenerator"
   - src: "./build/appicon.png"
-    dst: "/usr/share/icons/hicolor/128x128/apps/ytfeedgenerator.png"
-  - src: "./build/linux/ytfeedgenerator.desktop"
-    dst: "/usr/share/applications/ytfeedgenerator.desktop"
+    dst: "/usr/share/icons/hicolor/128x128/apps/YTFeedGenerator.png"
+  - src: "./build/linux/YTFeedGenerator.desktop"
+    dst: "/usr/share/applications/YTFeedGenerator.desktop"
 
 # Default dependencies for Debian 12/Ubuntu 22.04+ with WebKit 4.1
 depends:
