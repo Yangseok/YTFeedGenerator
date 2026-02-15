@@ -241,6 +241,21 @@ func (a *AppService) LogClientError(message string) {
 	a.logger.Printf("client: %s", msg)
 }
 
+func (a *AppService) exportBaseDir(subdir string) string {
+	subdir = strings.TrimSpace(subdir)
+	if subdir == "" {
+		subdir = "exports"
+	}
+	if a.dbPath == "" {
+		return subdir
+	}
+	baseDir := filepath.Dir(a.dbPath)
+	if baseDir == "" || baseDir == "." {
+		return subdir
+	}
+	return filepath.Join(baseDir, subdir)
+}
+
 func (a *AppService) GetAppSettings() (AppSettings, error) {
 	settings := AppSettings{
 		LLMProvider:            getSetting(a.DB, "llm_provider", "ollama"),
@@ -569,6 +584,40 @@ func (a *AppService) ListCollectionVideos(collectionID uint) ([]VideoItem, error
 }
 
 func (a *AppService) ExportCollectionMarkdown(collectionID uint) (string, error) {
+	content, err := a.buildCollectionMarkdown(collectionID)
+	if err != nil {
+		return "", err
+	}
+	baseDir := a.exportBaseDir("exports")
+	return a.Export.ExportMarkdown(context.Background(), content, baseDir, fmt.Sprintf("collection-%d.md", collectionID))
+}
+
+func (a *AppService) ExportCollectionPDF(collectionID uint) (string, error) {
+	content, err := a.buildCollectionPDFText(collectionID)
+	if err != nil {
+		return "", err
+	}
+	baseDir := a.exportBaseDir("exports")
+	return a.Export.ExportPDF(context.Background(), content, baseDir, fmt.Sprintf("collection-%d.pdf", collectionID))
+}
+
+func (a *AppService) ExportCollectionMarkdownToPath(collectionID uint, outputPath string) (string, error) {
+	content, err := a.buildCollectionMarkdown(collectionID)
+	if err != nil {
+		return "", err
+	}
+	return a.Export.ExportMarkdownToPath(context.Background(), content, outputPath)
+}
+
+func (a *AppService) ExportCollectionPDFToPath(collectionID uint, outputPath string) (string, error) {
+	content, err := a.buildCollectionPDFText(collectionID)
+	if err != nil {
+		return "", err
+	}
+	return a.Export.ExportPDFToPath(context.Background(), content, outputPath)
+}
+
+func (a *AppService) buildCollectionMarkdown(collectionID uint) (string, error) {
 	if collectionID == 0 {
 		return "", fmt.Errorf("collectionID is required")
 	}
@@ -591,11 +640,10 @@ func (a *AppService) ExportCollectionMarkdown(collectionID uint) (string, error)
 			content += fmt.Sprintf("%s\n\n", v.Summary)
 		}
 	}
-
-	return a.Export.ExportMarkdown(context.Background(), content, "exports", fmt.Sprintf("collection-%d.md", collectionID))
+	return content, nil
 }
 
-func (a *AppService) ExportCollectionPDF(collectionID uint) (string, error) {
+func (a *AppService) buildCollectionPDFText(collectionID uint) (string, error) {
 	if collectionID == 0 {
 		return "", fmt.Errorf("collectionID is required")
 	}
@@ -618,8 +666,7 @@ func (a *AppService) ExportCollectionPDF(collectionID uint) (string, error) {
 			content += fmt.Sprintf("%s\n\n", v.Summary)
 		}
 	}
-
-	return a.Export.ExportPDF(context.Background(), content, "exports", fmt.Sprintf("collection-%d.pdf", collectionID))
+	return content, nil
 }
 
 func (a *AppService) SaveTemplate(input TemplateInput) (models.Template, error) {
@@ -883,10 +930,11 @@ func (a *AppService) AutoTagVideo(videoID string, provider string, model string,
 
 func (a *AppService) ExportBackup() (BackupRestoreResult, error) {
 	timestamp := time.Now().Format("20060102-150405")
-	if err := os.MkdirAll("backups", 0o755); err != nil {
+	baseDir := a.exportBaseDir("backups")
+	if err := os.MkdirAll(baseDir, 0o755); err != nil {
 		return BackupRestoreResult{}, err
 	}
-	path := filepath.Join("backups", fmt.Sprintf("backup-%s.zip", timestamp))
+	path := filepath.Join(baseDir, fmt.Sprintf("backup-%s.zip", timestamp))
 
 	file, err := os.Create(path)
 	if err != nil {

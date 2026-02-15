@@ -69,8 +69,16 @@ export function ExportCollectionMarkdown(collectionID: number): $CancellableProm
     return $Call.ByID(3456935715, collectionID);
 }
 
+export function ExportCollectionMarkdownToPath(collectionID: number, outputPath: string): $CancellablePromise<string> {
+    return $Call.ByID(3457420037, collectionID, outputPath);
+}
+
 export function ExportCollectionPDF(collectionID: number): $CancellablePromise<string> {
     return $Call.ByID(2752699868, collectionID);
+}
+
+export function ExportCollectionPDFToPath(collectionID: number, outputPath: string): $CancellablePromise<string> {
+    return $Call.ByID(3616723174, collectionID, outputPath);
 }
 
 export function ExportTemplates(): $CancellablePromise<string> {

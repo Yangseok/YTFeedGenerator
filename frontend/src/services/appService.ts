@@ -47,6 +47,10 @@ export const AppService = {
     call("AppService.RemoveVideoFromCollection", collectionID, videoID),
   ExportCollectionMarkdown: (collectionID: number) => call("AppService.ExportCollectionMarkdown", collectionID),
   ExportCollectionPDF: (collectionID: number) => call("AppService.ExportCollectionPDF", collectionID),
+  ExportCollectionMarkdownToPath: (collectionID: number, outputPath: string) =>
+    call("AppService.ExportCollectionMarkdownToPath", collectionID, outputPath),
+  ExportCollectionPDFToPath: (collectionID: number, outputPath: string) =>
+    call("AppService.ExportCollectionPDFToPath", collectionID, outputPath),
   ListTags: () => call("AppService.ListTags"),
   CreateTag: (input: any) => call("AppService.CreateTag", input),
   DeleteTag: (id: number) => call("AppService.DeleteTag", id),

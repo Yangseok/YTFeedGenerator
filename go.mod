@@ -4,6 +4,7 @@ go 1.25
 
 require (
 	github.com/horiagug/youtube-transcript-api-go v0.0.13
+	github.com/phpdave11/gofpdf v1.4.3
 	github.com/wailsapp/wails/v3 v3.0.0-alpha.67
 	gorm.io/driver/sqlite v1.6.0
 	gorm.io/gorm v1.31.1

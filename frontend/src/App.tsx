@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Browser, Events, WML } from "@wailsio/runtime";
+import { Browser, Dialogs, Events, WML } from "@wailsio/runtime";
 import { AppService } from "../bindings/ytfeedgenerator/backend/app";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -69,6 +69,19 @@ function App() {
   const [collectionSearchQuery, setCollectionSearchQuery] = useState<string>("");
   const [collectionSearchResults, setCollectionSearchResults] = useState<any[]>([]);
   const [isSearchingCollections, setIsSearchingCollections] = useState<boolean>(false);
+  const [collectionExportPath, setCollectionExportPath] = useState<string>("");
+
+  const pickExportPath = async (defaultName: string, filterName: string, filterPattern: string) => {
+    return await Dialogs.SaveFile({
+      Filename: defaultName,
+      CanChooseDirectories: true,
+      CanChooseFiles: true,
+      CanCreateDirectories: true,
+      Filters: [{ DisplayName: filterName, Pattern: filterPattern }],
+      Title: "Choose export location",
+      ButtonText: "Export",
+    });
+  };
   const [autoSyncEnabled, setAutoSyncEnabled] = useState<boolean>(true);
   const [syncIntervalMinutes, setSyncIntervalMinutes] = useState<number>(30);
   const [notificationsEnabled, setNotificationsEnabled] = useState<boolean>(true);
@@ -486,6 +499,10 @@ function App() {
       loadTags();
     }
   }, [activeMenu]);
+
+  useEffect(() => {
+    setCollectionExportPath("");
+  }, [selectedCollectionId]);
 
   useEffect(() => {
     if (selectedVideo && templates.length === 0) {
@@ -1003,17 +1020,50 @@ function App() {
                       </div>
                     )}
                     <div className="flex flex-wrap justify-end gap-2">
+                      {collectionExportPath && (
+                        <div className="flex-1 text-xs text-emerald-200">
+                          Exported to {collectionExportPath}
+                        </div>
+                      )}
                       <Button
                         variant="outline"
                         className="h-9 px-4 text-sm"
-                        onClick={() => selectedCollectionId && AppService.ExportCollectionMarkdown(selectedCollectionId)}
+                        onClick={() => {
+                          if (!selectedCollectionId) return;
+                          pickExportPath(`collection-${selectedCollectionId}.md`, "Markdown", "*.md")
+                            .then((path: string) => {
+                              if (!path) return;
+                              return AppService.ExportCollectionMarkdownToPath(selectedCollectionId, path)
+                                .then((savedPath: string) => {
+                                  setCollectionExportPath(savedPath);
+                                  if (navigator.clipboard) {
+                                    navigator.clipboard.writeText(savedPath).catch(() => {});
+                                  }
+                                });
+                            })
+                            .catch((err: any) => reportError(err, "ExportCollectionMarkdown"));
+                        }}
                       >
                         Export Markdown
                       </Button>
                       <Button
                         variant="outline"
                         className="h-9 px-4 text-sm"
-                        onClick={() => selectedCollectionId && AppService.ExportCollectionPDF(selectedCollectionId)}
+                        onClick={() => {
+                          if (!selectedCollectionId) return;
+                          pickExportPath(`collection-${selectedCollectionId}.pdf`, "PDF", "*.pdf")
+                            .then((path: string) => {
+                              if (!path) return;
+                              return AppService.ExportCollectionPDFToPath(selectedCollectionId, path)
+                                .then((savedPath: string) => {
+                                  setCollectionExportPath(savedPath);
+                                  if (navigator.clipboard) {
+                                    navigator.clipboard.writeText(savedPath).catch(() => {});
+                                  }
+                                });
+                            })
+                            .catch((err: any) => reportError(err, "ExportCollectionPDF"));
+                        }}
                       >
                         Export PDF
                       </Button>
